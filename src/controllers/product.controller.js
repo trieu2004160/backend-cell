@@ -4,6 +4,7 @@ const {
   deleteProductService,
   updateProductService,
   getAllNameProductService,
+  getProductByIdService,
 } = require("../services/product.service");
 const { successResponse, errorResponse } = require("../utils/response.util");
 
@@ -92,10 +93,21 @@ const getAllNameProductController = async (req, res) => {
   }
 };
 
+const getProductByIdController = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const product = await getProductByIdService(id);
+    successResponse(res, "Get product successfully!", product, 200);
+  } catch (error) {
+    errorResponse(res, error);
+  }
+};
+
 module.exports = {
   createProductController,
   getAllProductController,
   deleteProductController,
   updateProductController,
   getAllNameProductController,
+  getProductByIdController,
 };
