@@ -34,8 +34,7 @@ const getProductByIdRepository = async (id) => {
               JSON_BUILD_OBJECT(
                 'id', pi.id,
                 'image_url', pi.image_url,
-                'alt_text', pi.alt_text,
-                'is_primary', pi.is_primary
+                'sort_order', pi.sort_order
               )
             ELSE NULL
           END
@@ -51,7 +50,7 @@ const getProductByIdRepository = async (id) => {
                 'storage', pv.storage,
                 'color', pv.color,
                 'image_url', pv.image_url,
-                'price', pv.price_adjustment,
+                'price', pv.sale_price,
                 'stock_quantity', pv.stock_quantity,
                 'is_active', pv.is_active
               )
