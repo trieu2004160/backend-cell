@@ -2,6 +2,10 @@ const express = require("express");
 const router = express.Router();
 const productVariantController = require("../controllers/product_variant.controller");
 
+// GET /api/product-variants/many-id?ids=1,2,3
+// Lấy nhiều variants theo danh sách IDs
+router.get("/many-id", productVariantController.getVariantsByIds);
+
 // GET /api/product-variants/capacity/:group_name
 // Lấy danh sách capacity cho một group_name
 router.get(

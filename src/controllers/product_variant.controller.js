@@ -161,6 +161,61 @@ const productVariantController = {
       });
     }
   },
+
+  // Lấy nhiều variants theo danh sách IDs
+  getVariantsByIds: async (req, res) => {
+    try {
+      const { ids } = req.query;
+
+      if (!ids) {
+        return res.status(400).json({
+          status: "error",
+          message: "IDs parameter is required",
+        });
+      }
+
+      const idArray = ids.split(",").map((id) => parseInt(id.trim()));
+
+      const variants = await sequelize.query(
+        `
+        SELECT 
+          pv.id,
+          pv.product_id,
+          pv.color as variant_name,
+          pv.sku,
+          pv.price,
+          pv.sale_price,
+          pv.stock_quantity,
+          pv.image_url,
+          pv.is_active,
+          pv.storage as capacity,
+          p.name as product_name,
+          1 as quantity
+        FROM product_variants pv
+        JOIN products p ON pv.product_id = p.id
+        WHERE pv.id IN (:ids)
+        AND pv.is_active = true
+        ORDER BY pv.id
+      `,
+        {
+          replacements: { ids: idArray },
+          type: QueryTypes.SELECT,
+        }
+      );
+
+      res.json({
+        status: "success",
+        message: `Found ${variants.length} variants`,
+        data: variants,
+      });
+    } catch (error) {
+      console.error("Error getting variants by IDs:", error);
+      res.status(500).json({
+        status: "error",
+        message: error.message,
+      });
+    }
+  },
 };
 
 module.exports = productVariantController;
