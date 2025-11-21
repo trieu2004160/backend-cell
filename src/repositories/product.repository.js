@@ -19,7 +19,11 @@ const checkSkuExist = async (sku) => {
 };
 
 const getProductByIdRepository = async (id) => {
-  console.log("=== NEW VERSION: GETTING PRODUCT BY ID:", id, "===");
+  console.log("=== NEW VERSION: GETTING PRODUCT BY ID/SLUG:", id, "===");
+
+  // Check if id is a number or slug
+  const isNumeric = !isNaN(id);
+  const whereClause = isNumeric ? "WHERE p.id = $1" : "WHERE p.slug = $1";
 
   const query = `
     SELECT 
@@ -64,7 +68,7 @@ const getProductByIdRepository = async (id) => {
     FROM products p
     LEFT JOIN categories c ON p.category_id = c.id
     LEFT JOIN brands b ON p.brand_id = b.id
-    WHERE p.id = $1
+    ${whereClause}
   `;
 
   const result = await sequelize
