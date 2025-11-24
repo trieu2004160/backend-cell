@@ -24,12 +24,14 @@ async function testAutoSalePrice() {
       { original: 35000000, expected: 31500000 },
     ];
 
-    testPrices.forEach(test => {
+    testPrices.forEach((test) => {
       const calculated = Math.round(test.original * 0.9);
-      console.log(`Original: ${test.original.toLocaleString('vi-VN')}đ`);
-      console.log(`Expected (10% off): ${test.expected.toLocaleString('vi-VN')}đ`);
-      console.log(`Calculated: ${calculated.toLocaleString('vi-VN')}đ`);
-      console.log(`✅ ${calculated === test.expected ? 'PASS' : 'FAIL'}\n`);
+      console.log(`Original: ${test.original.toLocaleString("vi-VN")}đ`);
+      console.log(
+        `Expected (10% off): ${test.expected.toLocaleString("vi-VN")}đ`
+      );
+      console.log(`Calculated: ${calculated.toLocaleString("vi-VN")}đ`);
+      console.log(`✅ ${calculated === test.expected ? "PASS" : "FAIL"}\n`);
     });
 
     console.log("=== CURRENT VARIANTS IN DATABASE ===\n");
@@ -44,10 +46,22 @@ async function testAutoSalePrice() {
 
     variants.forEach((v) => {
       console.log(`ID: ${v.id} - ${v.storage} ${v.color}`);
-      console.log(`  Original: ${Number(v.original_price).toLocaleString('vi-VN')}đ`);
-      console.log(`  Sale (DB): ${Number(v.sale_price).toLocaleString('vi-VN')}đ`);
-      console.log(`  Expected: ${Number(v.expected_sale).toLocaleString('vi-VN')}đ`);
-      console.log(`  ${Number(v.sale_price) === Number(v.expected_sale) ? '✅ OK' : '❌ NEEDS UPDATE'}\n`);
+      console.log(
+        `  Original: ${Number(v.original_price).toLocaleString("vi-VN")}đ`
+      );
+      console.log(
+        `  Sale (DB): ${Number(v.sale_price).toLocaleString("vi-VN")}đ`
+      );
+      console.log(
+        `  Expected: ${Number(v.expected_sale).toLocaleString("vi-VN")}đ`
+      );
+      console.log(
+        `  ${
+          Number(v.sale_price) === Number(v.expected_sale)
+            ? "✅ OK"
+            : "❌ NEEDS UPDATE"
+        }\n`
+      );
     });
 
     console.log("=== DONE ===\n");

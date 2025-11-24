@@ -31,10 +31,20 @@ async function checkLatestVariants() {
       console.log(`${index + 1}. ID: ${v.id}`);
       console.log(`   Storage: ${v.storage}`);
       console.log(`   Color: ${v.color}`);
-      console.log(`   Sale Price: ${Number(v.sale_price).toLocaleString("vi-VN")}đ`);
-      console.log(`   Original Price: ${Number(v.original_price).toLocaleString("vi-VN")}đ`);
+      console.log(
+        `   Sale Price: ${Number(v.sale_price).toLocaleString("vi-VN")}đ`
+      );
+      console.log(
+        `   Original Price: ${Number(v.original_price).toLocaleString(
+          "vi-VN"
+        )}đ`
+      );
       console.log(`   Stock: ${v.stock_quantity}`);
-      console.log(`   Image: ${v.image_url ? v.image_url.substring(0, 50) + "..." : "No image"}`);
+      console.log(
+        `   Image: ${
+          v.image_url ? v.image_url.substring(0, 50) + "..." : "No image"
+        }`
+      );
       console.log(`   Created: ${v.created_at}`);
       console.log("");
     });

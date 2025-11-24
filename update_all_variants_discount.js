@@ -30,7 +30,7 @@ async function updateAllVariantsWithAutoDiscount() {
     // Update each variant with calculated sale_price
     for (const variant of allVariants) {
       const newSalePrice = Math.round(variant.original_price * 0.9);
-      
+
       await sequelize.query(
         `UPDATE product_variants 
          SET sale_price = :salePrice
@@ -38,20 +38,30 @@ async function updateAllVariantsWithAutoDiscount() {
         {
           replacements: {
             salePrice: newSalePrice,
-            id: variant.id
+            id: variant.id,
           },
-          type: QueryTypes.UPDATE
+          type: QueryTypes.UPDATE,
         }
       );
 
-      console.log(`✅ Updated ID ${variant.id}: ${variant.storage} ${variant.color}`);
-      console.log(`   Original: ${Number(variant.original_price).toLocaleString('vi-VN')}đ`);
-      console.log(`   Old Sale: ${Number(variant.sale_price).toLocaleString('vi-VN')}đ`);
-      console.log(`   New Sale: ${newSalePrice.toLocaleString('vi-VN')}đ (10% off)\n`);
+      console.log(
+        `✅ Updated ID ${variant.id}: ${variant.storage} ${variant.color}`
+      );
+      console.log(
+        `   Original: ${Number(variant.original_price).toLocaleString(
+          "vi-VN"
+        )}đ`
+      );
+      console.log(
+        `   Old Sale: ${Number(variant.sale_price).toLocaleString("vi-VN")}đ`
+      );
+      console.log(
+        `   New Sale: ${newSalePrice.toLocaleString("vi-VN")}đ (10% off)\n`
+      );
     }
 
     console.log("\n=== VERIFICATION ===\n");
-    
+
     // Verify updates
     const updated = await sequelize.query(
       `SELECT id, storage, color, original_price, sale_price,
@@ -65,13 +75,19 @@ async function updateAllVariantsWithAutoDiscount() {
     let allCorrect = true;
     updated.forEach((v) => {
       const isCorrect = Number(v.sale_price) === Number(v.expected_sale);
-      console.log(`${v.storage} ${v.color}: ${isCorrect ? '✅' : '❌'}`);
-      console.log(`  Sale: ${Number(v.sale_price).toLocaleString('vi-VN')}đ`);
-      console.log(`  Expected: ${Number(v.expected_sale).toLocaleString('vi-VN')}đ\n`);
+      console.log(`${v.storage} ${v.color}: ${isCorrect ? "✅" : "❌"}`);
+      console.log(`  Sale: ${Number(v.sale_price).toLocaleString("vi-VN")}đ`);
+      console.log(
+        `  Expected: ${Number(v.expected_sale).toLocaleString("vi-VN")}đ\n`
+      );
       if (!isCorrect) allCorrect = false;
     });
 
-    console.log(allCorrect ? "🎉 ALL VARIANTS UPDATED SUCCESSFULLY!" : "⚠️ Some variants need attention");
+    console.log(
+      allCorrect
+        ? "🎉 ALL VARIANTS UPDATED SUCCESSFULLY!"
+        : "⚠️ Some variants need attention"
+    );
     console.log("\n=== DONE ===\n");
     process.exit(0);
   } catch (error) {
