@@ -1,6 +1,7 @@
 const {
   checkNameExist,
   checkSlugExist,
+  checkSkuExist,
   createProductRepository,
   getAllProductReposiroty,
   deleteProductRepository,
@@ -18,7 +19,7 @@ const createProductService = async (payload) => {
   const slugProduct = await checkSlugExist(slug);
   if (slugProduct) throw new Error("Slug is already exist!");
 
-  const skuBrand = await checkSlugExist(sku);
+  const skuBrand = await checkSkuExist(sku);
   if (skuBrand) throw new Error("Sku is already exist!");
 
   return await createProductRepository(payload);
@@ -35,14 +36,35 @@ const deleteProductService = async (id) => {
 const updateProductService = async (id, payload) => {
   const { name, slug, sku } = payload;
 
-  const nameProduct = await checkNameExist(name);
-  if (nameProduct) throw new Error("Product is already exist!");
+  // Get current product to compare
+  const currentProduct = await getProductByIdRepository(id);
+  if (!currentProduct) {
+    throw new Error("Product not found");
+  }
 
-  const slugProduct = await checkSlugExist(slug);
-  if (slugProduct) throw new Error("Slug is already exist!");
+  // Only check if name changed
+  if (name && name !== currentProduct.name) {
+    const nameProduct = await checkNameExist(name);
+    if (nameProduct && nameProduct.id !== parseInt(id)) {
+      throw new Error("Product name is already exist!");
+    }
+  }
 
-  const skuBrand = await checkSlugExist(sku);
-  if (skuBrand) throw new Error("Sku is already exist!");
+  // Only check if slug changed
+  if (slug && slug !== currentProduct.slug) {
+    const slugProduct = await checkSlugExist(slug);
+    if (slugProduct && slugProduct.id !== parseInt(id)) {
+      throw new Error("Slug is already exist!");
+    }
+  }
+
+  // Only check if sku changed
+  if (sku && sku !== currentProduct.sku) {
+    const skuProduct = await checkSkuExist(sku);
+    if (skuProduct && skuProduct.id !== parseInt(id)) {
+      throw new Error("SKU is already exist!");
+    }
+  }
 
   return await updateProductRepository(id, payload);
 };

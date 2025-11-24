@@ -1,43 +1,37 @@
+const fs = require('fs');
 const sequelize = require("./src/configs/database.config");
-const { QueryTypes } = require("sequelize");
 
-async function checkLaptopData() {
+async function checkProducts() {
   try {
-    console.log("🔍 KIỂM TRA DỮ LIỆU LAPTOP TRONG DATABASE\n");
+    await sequelize.authenticate();
+    console.log("Connection has been established successfully.");
 
-    const products = await sequelize.query(
-      `
-      SELECT p.id, p.name, c.name as category_name, b.name as brand_name
-      FROM products p
-      JOIN categories c on c.id = p.category_id
-      JOIN brands b on b.id = p.brand_id
-      ORDER BY c.name, p.name
-    `,
-      { type: QueryTypes.SELECT }
-    );
+    const [products] = await sequelize.query(`
+      SELECT * FROM products 
+      WHERE LOWER(name) LIKE '%iphone 14 pro max%'
+    `);
 
-    console.log("💻 Tất cả sản phẩm theo category:");
-    const groupedProducts = {};
-    products.forEach((product) => {
-      if (!groupedProducts[product.category_name]) {
-        groupedProducts[product.category_name] = [];
-      }
-      groupedProducts[product.category_name].push(product);
-    });
+    const result = [];
 
-    Object.keys(groupedProducts).forEach((categoryName) => {
-      console.log(
-        `\n📱 ${categoryName} (${groupedProducts[categoryName].length} sản phẩm):`
-      );
-      groupedProducts[categoryName].forEach((product) => {
-        console.log(`  - ${product.name} (${product.brand_name})`);
+    for (const p of products) {
+      const [variants] = await sequelize.query(`
+        SELECT * FROM product_variants WHERE product_id = ${p.id}
+      `);
+
+      result.push({
+        product: p,
+        variants: variants
       });
-    });
+    }
+
+    fs.writeFileSync('products.json', JSON.stringify(result, null, 2));
+    console.log("Data written to products.json");
+
   } catch (error) {
-    console.error("❌ Lỗi:", error.message);
+    console.error("Error:", error);
   } finally {
-    process.exit(0);
+    await sequelize.close();
   }
 }
 
-checkLaptopData();
+checkProducts();

@@ -103,7 +103,7 @@ const getAllProductReposiroty = async (options = {}) => {
   if (search) {
     paramCount++;
     whereConditions.push(
-      `(p.name ILIKE $${paramCount} OR p.full_description ILIKE $${paramCount})`
+      `(p.name ILIKE $${paramCount} OR p.description ILIKE $${paramCount})`
     );
     params.push(`%${search}%`);
   }

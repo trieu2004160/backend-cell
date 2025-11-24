@@ -1,0 +1,38 @@
+[
+  {
+    "id": 248,
+    "name": "iPhone 16 Pro Max",
+    "slug": "16prm",
+    "sale_price": "28437000.00",
+    "original_price": "30437000.00",
+    "stock_quantity": 0,
+    "createdAt": "2025-11-23T08:26:23.677Z",
+    "updatedAt": "2025-11-24T06:33:24.570Z",
+    "variants": [
+      {
+        "id": 44,
+        "product_id": 248,
+        "storage": "512GB",
+        "color": "Black",
+        "sale_price": "34706000.00",
+        "original_price": "34706000.00",
+        "stock_quantity": 5,
+        "is_active": true,
+        "createdAt": "2025-11-24T05:34:57.035Z",
+        "updatedAt": "2025-11-24T06:33:24.567Z"
+      },
+      {
+        "id": 45,
+        "product_id": 248,
+        "storage": "256GB",
+        "color": "Titan Black",
+        "sale_price": "28437000.00",
+        "original_price": "30437000.00",
+        "stock_quantity": 10,
+        "is_active": true,
+        "createdAt": "2025-11-24T06:33:24.553Z",
+        "updatedAt": "2025-11-24T06:33:24.553Z"
+      }
+    ]
+  }
+]

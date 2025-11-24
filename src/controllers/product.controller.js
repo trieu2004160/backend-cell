@@ -10,9 +10,15 @@ const { successResponse, errorResponse } = require("../utils/response.util");
 
 const createProductController = async (req, res) => {
   try {
+    console.log("\n=== CREATE PRODUCT CONTROLLER ===");
+    console.log("Request Body:", JSON.stringify(req.body, null, 2));
+
     const product = await createProductService(req.body);
+
+    console.log("Product created successfully:", product.id);
     successResponse(res, "Create product successfully!", product, 200);
   } catch (error) {
+    console.error("❌ CREATE PRODUCT ERROR:", error.message);
     errorResponse(res, error);
   }
 };
@@ -72,9 +78,13 @@ const updateProductController = async (req, res) => {
   try {
     const { id } = req.params;
     const paload = req.body;
+    console.log("=== UPDATE PRODUCT ===");
+    console.log("ID:", id);
+    console.log("Payload:", JSON.stringify(paload, null, 2));
     const product = await updateProductService(id, paload);
     successResponse(res, "Update product successfully!", product, 200);
   } catch (error) {
+    console.error("Update error:", error.message);
     errorResponse(res, error);
   }
 };

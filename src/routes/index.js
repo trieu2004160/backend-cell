@@ -13,6 +13,7 @@ const menuRoute = require("./menu.route");
 const testRoute = require("./test.route");
 const productVariantRoute = require("./product_variant.route");
 const cartItemRoute = require("./cart_item.route");
+const variantRoute = require("./variant.route");
 
 console.log("Loading admin routes...");
 const adminVariantRoute = require("./admin.variants.simple.routes");
@@ -37,6 +38,7 @@ routes.use("/menu", menuRoute);
 routes.use("/test", testRoute);
 routes.use("/product-variants", productVariantRoute);
 routes.use("/cart-items", cartItemRoute);
+routes.use("/", variantRoute); // New variant management routes
 routes.use("/", uploadApiRoute);
 
 console.log("All routes registered");

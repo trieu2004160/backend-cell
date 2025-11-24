@@ -19,8 +19,27 @@ app.use(
     allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
+// Add request logging middleware
+app.use((req, res, next) => {
+  console.log(`\n=== ${req.method} REQUEST RECEIVED ===`);
+  console.log('URL:', req.url);
+  console.log('Headers:', JSON.stringify(req.headers, null, 2));
+  next();
+});
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Log parsed body
+app.use((req, res, next) => {
+  if (req.method === 'POST' || req.method === 'PATCH' || req.method === 'PUT') {
+    console.log('Parsed Body:', JSON.stringify(req.body, null, 2));
+  }
+  next();
+});
+
+
+
 
 console.log("Mounting routes to /api...");
 app.use("/api", allRoute);

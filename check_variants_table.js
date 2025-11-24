@@ -1,5 +1,5 @@
-const { Sequelize, QueryTypes } = require("sequelize");
 require("dotenv").config();
+const { Sequelize } = require("sequelize");
 
 const sequelize = new Sequelize(
   process.env.DB_NAME,
@@ -13,56 +13,27 @@ const sequelize = new Sequelize(
   }
 );
 
-async function checkVariantsTable() {
+(async () => {
   try {
-    console.log("🔌 Connecting to database...");
     await sequelize.authenticate();
-    console.log("✅ Connected!");
+    console.log("✅ Connected to database.\n");
 
-    // Check if table exists and show structure
-    console.log("\n📋 Checking product_variants table structure...");
-
-    const tableInfo = await sequelize.query(
-      `
-      SELECT column_name, data_type, is_nullable, column_default
-      FROM information_schema.columns 
+    const [columns] = await sequelize.query(`
+      SELECT column_name, data_type, is_nullable
+      FROM information_schema.columns
       WHERE table_name = 'product_variants'
-      ORDER BY ordinal_position
-    `,
-      { type: QueryTypes.SELECT }
-    );
+      ORDER BY ordinal_position;
+    `);
 
-    if (tableInfo.length > 0) {
-      console.log("✅ Table exists with columns:");
-      tableInfo.forEach((col) => {
-        console.log(
-          `  - ${col.column_name}: ${col.data_type} ${
-            col.is_nullable === "NO" ? "NOT NULL" : "NULL"
-          }`
-        );
-      });
+    console.log("📋 product_variants table columns:");
+    console.log("Column Name | Data Type | Nullable");
+    console.log("------------|-----------|----------");
+    columns.forEach(col => {
+      console.log(`${col.column_name} | ${col.data_type} | ${col.is_nullable}`);
+    });
 
-      // Show existing data
-      const data = await sequelize.query(
-        "SELECT * FROM product_variants LIMIT 5",
-        { type: QueryTypes.SELECT }
-      );
-      console.log(`\n📊 Sample data (${data.length} rows):`);
-      data.forEach((row, i) => {
-        console.log(
-          `  ${i + 1}. ID: ${row.id}, Product: ${row.product_id}, Storage: ${
-            row.storage || "N/A"
-          }, Color: ${row.color || "N/A"}`
-        );
-      });
-    } else {
-      console.log("❌ Table does not exist");
-    }
+    await sequelize.close();
   } catch (error) {
     console.error("❌ Error:", error.message);
-  } finally {
-    await sequelize.close();
   }
-}
-
-checkVariantsTable();
+})();

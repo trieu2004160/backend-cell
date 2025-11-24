@@ -33,10 +33,10 @@ const Product = sequelize.define(
     short_description: {
       type: DataTypes.TEXT,
     },
-    full_description: {
+    description: {
       type: DataTypes.TEXT,
     },
-    price: {
+    original_price: {
       type: DataTypes.DECIMAL(15, 2),
       allowNull: false,
     },
