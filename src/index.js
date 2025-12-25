@@ -1,6 +1,7 @@
 require("dotenv").config();
 require("./configs/database.config");
 const express = require("express");
+const path = require("path");
 const app = express();
 const PORT = process.env.PORT || 3001;
 const allRoute = require("./routes/index");
@@ -19,6 +20,10 @@ app.use(
     allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
+
+// Serve static files for uploads
+app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
+
 // Add request logging middleware
 app.use((req, res, next) => {
   console.log(`\n=== ${req.method} REQUEST RECEIVED ===`);
@@ -79,6 +84,34 @@ app.get("/api/test-products", async (req, res) => {
       message: error.message,
     });
   }
+});
+
+// Error handling middleware - phải đặt SAU tất cả routes
+app.use((err, req, res, next) => {
+  console.error('❌ Error occurred:');
+  console.error('Error name:', err.name);
+  console.error('Error message:', err.message);
+  console.error('Error stack:', err.stack);
+
+  // Multer errors
+  if (err.name === 'MulterError') {
+    if (err.code === 'LIMIT_FILE_SIZE') {
+      return res.status(400).json({
+        status: 'error',
+        message: 'File quá lớn! Giới hạn 5MB'
+      });
+    }
+    return res.status(400).json({
+      status: 'error',
+      message: err.message
+    });
+  }
+
+  // Other errors
+  res.status(500).json({
+    status: 'error',
+    message: err.message || 'Lỗi server không xác định'
+  });
 });
 
 app.listen(PORT, "0.0.0.0", () => {

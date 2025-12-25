@@ -22,23 +22,29 @@ console.log("Admin variant simple route loaded");
 const uploadApiRoute = require("./upload.routes");
 console.log("Upload API route loaded");
 
-const adminProductImagesRoute = require("./admin.product.images.simple.routes");
-console.log("Admin product images simple route loaded");
+const adminProductImagesRoute = require("./admin.product.images.routes");
+console.log("Admin product images route loaded");
 
 console.log("Registering routes...");
 routes.use("/auth", authRoute);
 routes.use("/category", categoryRoute);
 routes.use("/brand", brandRoute);
-routes.use("/products", productRoute);
 routes.use("/upload", uploadRoute);
+
+// Admin routes - mount TRƯỚC để có priority cao hơn
 routes.use("/admin/variants", adminVariantRoute);
 routes.use("/admin/product-images", adminProductImagesRoute);
+
+// Public routes
+routes.use("/products", productRoute);
 routes.use("/product-images", product_imageRoute);
 routes.use("/menu", menuRoute);
 routes.use("/test", testRoute);
 routes.use("/product-variants", productVariantRoute);
 routes.use("/cart-items", cartItemRoute);
-routes.use("/", variantRoute); // New variant management routes
+
+// Generic routes - mount CUỐI CÙNG
+routes.use("/", variantRoute); // Variant management: /products/:id/variants, /variants/:id
 routes.use("/", uploadApiRoute);
 
 console.log("All routes registered");

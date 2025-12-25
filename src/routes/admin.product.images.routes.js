@@ -96,6 +96,9 @@ router.get("/product/:productId", async (req, res) => {
 // Tạo ảnh sản phẩm mới
 router.post("/", async (req, res) => {
   try {
+    console.log("=== CREATE PRODUCT IMAGE REQUEST ===");
+    console.log("Request body:", req.body);
+
     const {
       product_id,
       image_type,
@@ -108,10 +111,11 @@ router.post("/", async (req, res) => {
     } = req.body;
 
     // Kiểm tra dữ liệu đầu vào
-    if (!product_id || !image_type || !image_url || !alt_text) {
+    if (!product_id || !image_type) {
+      console.log("Validation failed: missing required fields");
       return res.status(400).json({
         status: "error",
-        message: "Thiếu thông tin bắt buộc",
+        message: "Thiếu thông tin bắt buộc (product_id, image_type)",
       });
     }
 
@@ -125,26 +129,32 @@ router.post("/", async (req, res) => {
     const values = [
       product_id,
       image_type,
-      image_url,
-      alt_text,
+      image_url || '', // Default to empty string if not provided
+      alt_text || '', // Default to empty string if not provided
       parseInt(sort_order) || 1,
       variant_capacity || null,
       variant_color || null,
       is_active !== undefined ? is_active : true,
     ];
 
+    console.log("Query values:", values);
+
     const result = await db.query(query, values);
+
+    console.log("Insert result:", result.rows);
 
     res.status(201).json({
       status: "success",
-      message: "Tạo ảnh sản phẩm thành công",
+      message: "Thêm ảnh sản phẩm thành công",
       data: result.rows[0],
     });
   } catch (error) {
     console.error("Error creating product image:", error);
+    console.error("Error stack:", error.stack);
     res.status(500).json({
       status: "error",
       message: "Lỗi server khi tạo ảnh sản phẩm",
+      error: error.message, // Add error details for debugging
     });
   }
 });
@@ -276,7 +286,7 @@ router.get("/product/:productId/variant", async (req, res) => {
 
     res.json({
       status: "success",
-      message: "Lấy ảnh variant thành công",
+      message: "Lọc ảnh sản phẩm thành công",
       data: result.rows,
     });
   } catch (error) {
