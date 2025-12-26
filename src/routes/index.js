@@ -10,7 +10,7 @@ const productRoute = require("./product.route");
 const uploadRoute = require("./upload.route");
 const product_imageRoute = require("./product_image.route");
 const menuRoute = require("./menu.route");
-const testRoute = require("./test.route");
+// const testRoute = require("./test.route"); // File không tồn tại - đã comment
 const productVariantRoute = require("./product_variant.route");
 const cartItemRoute = require("./cart_item.route");
 const variantRoute = require("./variant.route");
@@ -39,7 +39,7 @@ routes.use("/admin/product-images", adminProductImagesRoute);
 routes.use("/products", productRoute);
 routes.use("/product-images", product_imageRoute);
 routes.use("/menu", menuRoute);
-routes.use("/test", testRoute);
+// routes.use("/test", testRoute); // File không tồn tại - đã comment
 routes.use("/product-variants", productVariantRoute);
 routes.use("/cart-items", cartItemRoute);
 
